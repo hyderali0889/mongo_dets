@@ -97,12 +97,21 @@ const BootcampSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+} ,
+{
+  toJSON:{ virtuals: true},
+  toObject:{ virtuals: true}
+ });
 
 BootcampSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
+
+BootcampSchema.pre( 'remove' , async function (next){
+  await this.model("Course").deleteMany( { bootcamp : this._id } )
+next();
+ } )
 // Geocode & create location field
 // BootcampSchema.pre('save', async function(next) {
 //   const loc = await geocoder.geocode(this.address);
@@ -121,5 +130,12 @@ BootcampSchema.pre("save", function (next) {
 //   this.address = undefined;
 //   next();
 // });
+
+BootcampSchema.virtual( 'Course' , {
+  ref:'Course',
+  localField:"_id",
+  foreignField:"bootcamp",
+  justOne:false,
+ } )
 
 module.exports = mongoose.model("Bootcamp_Data", BootcampSchema);

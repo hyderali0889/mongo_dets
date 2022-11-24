@@ -8,12 +8,21 @@ const {
   getSingleBootcamp,
 } = require("../controllers/bootcampsController");
 
-router.route("/").get(getBootcamp).post(createBootcamp);
+const advancedResults = require('../middlewares/advanceResults');
+const bootcampModel = require('../models/BootcampModel');
+const coursesRoute = require("./mainCourseRoutes");
+
+// Rerouting into Other Resources Folder
+
+router.use("/:bootcampId/courses", coursesRoute);
+
+router.route("/").get(advancedResults(bootcampModel , 'Course'), getBootcamp).post(createBootcamp);
 
 router
   .route("/:id")
   .put(updateBootcamp)
   .delete(deleteBootcamp)
   .get(getSingleBootcamp);
+
 
 module.exports = router;

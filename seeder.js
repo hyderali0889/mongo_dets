@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const colors = require('colors');
 // Load models
 const Bootcamp = require('./models/BootcampModel');
+const Courses = require('./models/CourseModel');
+
 
 
 // Connect to DB
@@ -13,11 +15,18 @@ const bootcamps = JSON.parse(
   fs.readFileSync(`${__dirname}/Resources/_data/bootcamps.json`, 'utf-8')
 );
 
+// Read JSON files
+const courses = JSON.parse(
+  fs.readFileSync(`${__dirname}/Resources/_data/courses.json`, 'utf-8')
+);
+
 
 // Import into DB
 const importData = async () => {
   try {
     await Bootcamp.create(bootcamps);
+   await Courses.create(courses);
+
     console.log('Data Imported...'.green.inverse);
     process.exit();
   } catch (err) {
@@ -29,8 +38,8 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await Bootcamp.deleteMany();
-
-    console.log('Data Destroyed...'.red.inverse);
+   await Courses.deleteMany();
+  console.log('Data Destroyed...'.red.inverse);
     process.exit();
   } catch (err) {
     console.error(err);
