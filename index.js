@@ -6,6 +6,7 @@ const courses = require("./routes/mainCourseRoutes")
 const mongo = require('./config/db')
 const err = require('./middlewares/errHandlerMiddleware')
 const image = require('./routes/mainImageRoutes');
+const Users = require('./routes/userRoutes');
 
 
 dotenv.config({ path: "./config/conf.env" });
@@ -20,6 +21,8 @@ app.use(express.json());
 app.use( '/v1/bootcamps' ,bootcamps  )
 app.use( '/v1/courses' ,courses  )
 app.use( '/v1/uploadImage' , image )
+app.use( '/v1/users' , Users )
+
 
 app.use( err );
 
